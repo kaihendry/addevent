@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  DomainName:
+    Type: String
+    Default: hellosam.dabase.com
+  ACMCertificateArn:
+    Type: String
+  Version:
+    Type: String
+
+Resources:
+  Gateway:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      Domain:
+        DomainName: !Ref DomainName
+        CertificateArn: !Ref ACMCertificateArn
+
+  Hello:
+    Type: AWS::Serverless::Function
+    Properties:
+      Architectures:
+        - arm64
+      Handler: main
+      CodeUri: ./
+      Runtime: provided.al2
+      Events:
+        CatchAll:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref Gateway
+            Path: /{proxy+}
+            Method: ANY
+      Environment:
+        Variables:
+          version: !Ref Version
+    Metadata:
+      BuildMethod: makefile
+
+Outputs:
+  CNAME:
+    Description: The regional domain name for CNAME value
+    Value: !GetAtt [Gateway.DomainName, RegionalDomainName]
