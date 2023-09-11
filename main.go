@@ -38,6 +38,7 @@ func addevent(w http.ResponseWriter, r *http.Request) {
 	cal.SetMethod(ics.MethodRequest)
 	event := cal.AddEvent(fmt.Sprintf("hendry+%s@iki.fi", "a test"))
 	event.SetCreatedTime(time.Now())
+	event.SetDtStampTime(time.Now())
 	event.SetModifiedAt(time.Now())
 	event.SetStartAt(time.Now())
 	event.SetEndAt(time.Now().Add(1 * time.Hour))
