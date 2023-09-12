@@ -36,13 +36,14 @@ func addevent(w http.ResponseWriter, r *http.Request) {
 
 	cal := ics.NewCalendar()
 	cal.SetMethod(ics.MethodRequest)
+	cal.SetUrl("https://addevent.dabase.com/")
 	event := cal.AddEvent(fmt.Sprintf("hendry+%s@iki.fi", "a test"))
 	event.SetCreatedTime(time.Now())
 	event.SetDtStampTime(time.Now())
 	event.SetModifiedAt(time.Now())
 	event.SetStartAt(time.Now())
 	event.SetEndAt(time.Now().Add(1 * time.Hour))
-	event.SetSummary("Just testing")
+	event.SetSummary(fmt.Sprintf("Just testing %s", time.Now().Format("Monday")))
 	event.SetLocation("A wood")
 
 	w.Write([]byte(cal.Serialize()))
