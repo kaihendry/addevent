@@ -44,7 +44,11 @@ func addevent(w http.ResponseWriter, r *http.Request) {
 	event.SetStartAt(time.Now())
 	event.SetEndAt(time.Now().Add(1 * time.Hour))
 	event.SetSummary(fmt.Sprintf("Just testing %s", time.Now().Format("Monday")))
-	event.SetLocation("A wood")
+
+	// get the UA string from the request headers
+	ua := r.Header.Get("User-Agent")
+
+	event.SetLocation("A wood " + ua)
 
 	w.Write([]byte(cal.Serialize()))
 }
