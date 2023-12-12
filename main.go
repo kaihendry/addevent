@@ -17,7 +17,12 @@ var GoVersion = runtime.Version()
 
 func main() {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", addevent)
+	// redirect to addevent
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/addevent", http.StatusTemporaryRedirect)
+	})
+
+	mux.HandleFunc("/addevent", addevent)
 	var err error
 	if _, ok := os.LookupEnv("AWS_LAMBDA_FUNCTION_NAME"); ok {
 		slog.SetDefault(slog.New(slog.NewJSONHandler(os.Stdout, nil)))
